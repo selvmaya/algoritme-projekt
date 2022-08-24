@@ -29,9 +29,25 @@ public static class Sorter
 
 		return myList;
 	}
+	// rasmus 2: binarySearch via recursion (calls itself using self-edited parameters)
+	public static int BinarySearch(int[] sortedArray, int target, int startIndex, int endIndex)
+	{
+		//Stops crashes in wacky situations
+		if (startIndex > endIndex) return 0;
+
+		//Check if your value is on the middle index
+		int mid = (startIndex + endIndex) / 2;
+		if (target == sortedArray[mid]) return mid; //Here's your result
+
+		//If my target is smaller than the middle index's value, run it again but only the first half
+		if (target < sortedArray[mid]) return BinarySearch(sortedArray, target, startIndex, mid);
+
+		//Otherwise run it again but only the second half
+		return BinarySearch(sortedArray, target, mid, endIndex);
+	}
 
 	// mikkel
-	private static void SortCustom(ref int[] numbers)
+	public static void SortCustom(ref int[] numbers)
 	{
 		// left to right
 		for (int i = 0; i < numbers.Length; i++)
