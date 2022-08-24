@@ -1,7 +1,11 @@
-﻿namespace Algoritmer;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Algoritmer;
+
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public static class Sorter
 {
+	// rasmus
 	public static int[] MySort(int[] myList)
 	{
 		//Repeats the motion as many times as the list is long
@@ -18,9 +22,7 @@ public static class Sorter
 				if (myList[j] > myList[j + 1])
 				{
 					//Swap the indexes
-					int temp = myList[j];
-					myList[j] = myList[j + 1];
-					myList[j + 1] = temp;
+					(myList[j], myList[j + 1]) = (myList[j + 1], myList[j]);
 				}
 			}
 		}
@@ -28,5 +30,23 @@ public static class Sorter
 		return myList;
 	}
 
+	// mikkel
+	private static void SortCustom(ref int[] numbers)
+	{
+		// left to right
+		for (int i = 0; i < numbers.Length; i++)
+		{
+			// start point (right-ish (from zero)) towards left
+			for (int j = i; j > 0; j--) // does not include zero index
+			{
+				int value = numbers[j];
+				int valueOnLeft = numbers[j - 1];
+				if (value >= valueOnLeft) continue;
 
+				// swap values
+				numbers[j - 1] = value;
+				numbers[j] = valueOnLeft;
+			}
+		}
+	}
 }
