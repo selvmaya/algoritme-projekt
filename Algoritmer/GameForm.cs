@@ -9,7 +9,7 @@ namespace Algoritmer
 			Spades,
 			Clubs,
 		}
-	    private const int CardCount = 13;
+	    private const int HighestCardNumber = 13;
 	    private const int DeckSize = 52;
 
 	    private readonly Deck _mainDeck;
@@ -33,7 +33,7 @@ namespace Algoritmer
         {
 			BackColor = Color.Black;
 
-			_mainDeck.Draw();
+			_mainDeck.Draw(_graphics, _cardPen);
         }
 
 
@@ -43,21 +43,25 @@ namespace Algoritmer
 
 	        public Deck() // fresh deck of cards
 	        {
-		        Cards = new List<Card>();
-		        const int amountOfCardsPerType = DeckSize / CardCount;
-		        for (int cardNumberIndex = 0; cardNumberIndex < CardCount; cardNumberIndex++)
-		        {
-			        for (int type = 0; type < amountOfCardsPerType; type++)
-			        {
-				        Cards.Add(new Card(cardNumberIndex));
-			        }
-		        }
+		        Cards = FreshCards();
 	        }
 
-	        // public Deck(List<Card> cards) // Construction from cards
-	        // {
-		       //  Cards = cards;
-	        // } // note: probably shouldnt want this, logic-wise?
+	        private List<Card> FreshCards()
+	        {
+		        List<Card> cards = new List<Card>();
+		        for (int numberIndex = 0; numberIndex < HighestCardNumber; numberIndex++)
+		        {
+			        Array types = Enum.GetValues(typeof(CardType));
+			        int typeTotal = types.Length;
+			        for (int typeIndex = 0; typeIndex < typeTotal; typeIndex++)
+			        {
+				        CardType type = (CardType)types.GetValue(typeIndex)!;
+				        Card card = new Card(numberIndex, type);
+						cards.Add(card);
+			        }
+		        }
+		        return cards;
+	        }
 
 	        public void Shuffle()
 	        {
@@ -69,20 +73,19 @@ namespace Algoritmer
 		        }
 	        }
 
-	        public void Draw()
+	        public void Draw(Graphics graphics, Pen pen)
 			{
 				// todo: define deck drawing area (placement/size)
 
 				foreach (Card card in Cards)
 				{
-					card.Draw();
+					card.Draw(graphics, pen);
 				}
 			}
         }
 
         private class Card
         {
-
 	        public readonly CardType Type;
 	        public readonly int Number;
 
@@ -109,10 +112,10 @@ namespace Algoritmer
 		        return $"{NumberName()} of {Type}";
 	        }
 
-	        public void Draw()
+	        public void Draw(Graphics graphics, Pen pen)
 			{
 				Rectangle rect = new Rectangle(); // todo: define card placement/size
-				 _graphics.DrawRectangle(_cardPen, rect);
+				 graphics.DrawRectangle(pen, rect);
 
 				 // todo: draw card number/name
 			}
