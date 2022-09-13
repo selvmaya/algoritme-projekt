@@ -4,3 +4,6 @@ Algoritmer/.idea
 Algoritmer/Algoritmer.csproj.user
 *.user
 Algoritmer/bin
+.idea
+BlackjackConsoleGame/BlackjackConsoleGame/bin
+BlackjackConsoleGame/BlackjackConsoleGame/obj
