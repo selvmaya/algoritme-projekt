@@ -33,10 +33,12 @@ public static class Program
 			{
 				Console.Clear();
 				Console.WriteLine("--- BLACKJACK: GET TO 21 ---");
-				Newline();
+				InsertNewline();
 				Console.WriteLine($"DEALER: {dealer}");
 				Console.WriteLine($"PLAYER: {player}");
-				Newline();
+				InsertNewline();
+				if (dealerIsDrawing) Console.WriteLine("Dealer is drawing cards...");
+				else if (lastAnswer != null) Console.WriteLine($"You said {(lastAnswer.Value ? "yes" : "no")} to get a card.");
 			}
 
             deck.Shuffle();
