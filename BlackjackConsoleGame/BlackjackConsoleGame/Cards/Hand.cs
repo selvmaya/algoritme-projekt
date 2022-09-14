@@ -17,7 +17,7 @@ public class Hand : CardCollection
 				if (card.Value == 1)
 				{
 					aces++; // we need to account for ace choice
-					continue;
+					continue; // aces are added at the end
 				}
 				sum += card.Value;
 			}
