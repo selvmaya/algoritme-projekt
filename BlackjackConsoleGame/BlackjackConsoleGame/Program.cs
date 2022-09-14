@@ -17,14 +17,11 @@ public static class Program
 		bool dealerIsDrawing;
 		bool? lastAnswer;
 
-        // Console.WriteLine("APP START");
-        // Thread.Sleep(500);
         do // repeated games
         {
 	        Table table = new Table();
 
-	        // Deck deck = table.Deck;
-            Hand dealer = table.Dealer;
+	        Hand dealer = table.Dealer;
             Hand player = table.Player;
 
 	        // bools for runtime display options
@@ -66,9 +63,9 @@ public static class Program
 				UpdateTableInfo();
 				Thread.Sleep(750);
 			}
+			dealerIsDrawing = false;
 
 			// dramatically let player see final cards before end condition is stated
-			dealerIsDrawing = false;
 			UpdateTableInfo();
 			Thread.Sleep(1000);
 
@@ -95,8 +92,8 @@ public static class Program
 		{
 			Console.WriteLine(question);
 			string? input = Console.ReadLine();
-			lastAnswer = input != null && input.ToUpper().Contains(requiredChar);
-			return lastAnswer.Value;
+			lastAnswer = input?.ToUpper().Contains(requiredChar);
+			return lastAnswer != null && lastAnswer.Value;
 		}
 	}
 
