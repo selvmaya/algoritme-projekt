@@ -21,9 +21,11 @@ public static class Program
         // Thread.Sleep(500);
         do // repeated games
         {
-            Hand dealer = new Hand();
-            Hand player = new Hand();
-	        Deck deck = new Deck();
+	        Table table = new Table();
+
+	        // Deck deck = table.Deck;
+            Hand dealer = table.Dealer;
+            Hand player = table.Player;
 
 	        // bools for runtime display options
 	        lastAnswer = null;
@@ -41,15 +43,15 @@ public static class Program
 				else if (lastAnswer != null) Console.WriteLine($"You said {(lastAnswer.Value ? "yes" : "no")} to get a card.");
 			}
 
-            deck.Shuffle();
-            deck.GiveCardTo(dealer); // dealer starts with 1 card.
-            deck.GiveCardsTo(player, 2); // player gets 2 cards.
+			table.Deck.Shuffle();
+			table.Deck.GiveCardTo(dealer); // dealer starts with 1 card.
+            table.Deck.GiveCardsTo(player, 2); // player gets 2 cards.
             UpdateTableInfo();
 
 			// give cards to player untill they say no, OR total >= 21 (immediate win or loss)
             while (player.TotalSum < 21 && BoolAsk("Do you want another card?"))
             {
-	            deck.GiveCardTo(player);
+	            table.Deck.GiveCardTo(player);
 	            UpdateTableInfo();
             }
             lastAnswer = null;
@@ -58,7 +60,7 @@ public static class Program
             // give cards to dealer untill total >= 17
 			while (dealer.TotalSum < 17)
 			{
-				deck.GiveCardTo(dealer);
+				table.Deck.GiveCardTo(dealer);
 
 				// dramatically add cards
 				UpdateTableInfo();
