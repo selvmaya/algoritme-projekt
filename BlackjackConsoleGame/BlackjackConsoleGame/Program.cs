@@ -14,7 +14,7 @@ public static class Program
             Hand player = new Hand();
 	        Deck deck = new Deck();
 
-			void UpdateVisuals()
+			void UpdateTableInfo() // TODO: make this prettier/graphically detailed
 			{
 				Console.Clear();
 				Console.WriteLine("--- BLACKJACK: GET TO 21 ---");
@@ -27,21 +27,19 @@ public static class Program
             deck.Shuffle();
             deck.GiveCardTo(dealer); // dealer starts with 1 card.
             deck.GiveCardsTo(player, 2); // player gets 2 cards.
+            UpdateTableInfo();
 
-            UpdateVisuals();
-
-			while (Ask("Do you want another card?"))
-			{
-				deck.GiveCardTo(player);
-	            if (player.TotalSum >= 21) break;
-	            UpdateVisuals();
-			}
-
-			deck.GiveCardTo(dealer);
+			// give cards untill player says no OR total >= 21
+            while (player.TotalSum < 21 && BoolAsk("Do you want another card?"))
+            {
+	            deck.GiveCardTo(player);
+	            UpdateTableInfo();
+            }
 
 			// game end
-			UpdateVisuals();
-            if (player.TotalSum == dealer.TotalSum) // tie
+			deck.GiveCardTo(dealer);
+			UpdateTableInfo();
+			if (player.TotalSum == dealer.TotalSum) // tie
             {
 	            Console.WriteLine("TIE WITH DEALER.");
             }
@@ -55,7 +53,7 @@ public static class Program
             }
 
             Newline(3);
-        } while (Ask("Do you want to play again?"));
+        } while (BoolAsk("Do you want to play again?"));
 
         Console.Clear();
         Console.WriteLine("Press enter to exit.");
@@ -66,10 +64,10 @@ public static class Program
     {
         Console.Write(new string('\n', amount));
     }
-    private static bool Ask(string question)
+    private static bool BoolAsk(string question, char requiredChar = 'Y')
     {
 	    Console.WriteLine(question);
 	    string? input = Console.ReadLine();
-	    return input != null && input.ToUpper().Contains('Y');
+	    return input != null && input.ToUpper().Contains(requiredChar);
     }
 }
