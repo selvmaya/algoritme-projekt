@@ -4,15 +4,30 @@ namespace BlackjackConsoleGame;
 
 public static class Program
 {
+	private enum EndCondition
+	{
+		Tie,
+		LossUnderDealer,
+		LossOver21,
+		Win,
+	}
+
 	public static void Main()
-    {
-        Console.WriteLine("APP START");
-        Thread.Sleep(500);
+	{
+		bool dealerIsDrawing;
+		bool? lastAnswer;
+
+        // Console.WriteLine("APP START");
+        // Thread.Sleep(500);
         do // repeated games
         {
             Hand dealer = new Hand();
             Hand player = new Hand();
 	        Deck deck = new Deck();
+
+	        // bools for runtime display options
+	        lastAnswer = null;
+	        dealerIsDrawing = false;
 
 			void UpdateTableInfo() // TODO: make this prettier/graphically detailed
 			{
@@ -29,45 +44,71 @@ public static class Program
             deck.GiveCardsTo(player, 2); // player gets 2 cards.
             UpdateTableInfo();
 
-			// give cards untill player says no OR total >= 21
+			// give cards to player untill they say no, OR total >= 21 (immediate win or loss)
             while (player.TotalSum < 21 && BoolAsk("Do you want another card?"))
             {
 	            deck.GiveCardTo(player);
 	            UpdateTableInfo();
             }
+            lastAnswer = null;
+
+	        dealerIsDrawing = true;
+            // give cards to dealer untill total >= 17
+			while (dealer.TotalSum < 17)
+			{
+				deck.GiveCardTo(dealer);
+
+				// dramatically add cards
+				UpdateTableInfo();
+				Thread.Sleep(750);
+			}
+
+			// dramatically let player see final cards before end condition is stated
+			dealerIsDrawing = false;
+			UpdateTableInfo();
+			Thread.Sleep(1000);
 
 			// game end
-			deck.GiveCardTo(dealer);
-			UpdateTableInfo();
-			if (player.TotalSum == dealer.TotalSum) // tie
-            {
-	            Console.WriteLine("TIE WITH DEALER.");
-            }
-            else if (player.TotalSum > 21 || player.TotalSum < dealer.TotalSum) // lose
-            {
-	            Console.WriteLine("LOSE. Larger than 21 OR less than dealer.");
-            }
-            else // win
-            {
-	            Console.WriteLine("WIN.");
-            }
+			Console.WriteLine(SelectEndText(CheckEndCondition()));
 
-            Newline(3);
+			EndCondition CheckEndCondition()
+			{
+				if (player.TotalSum == dealer.TotalSum)
+					return EndCondition.Tie;
+				if (player.TotalSum > 21)
+					return EndCondition.LossOver21;
+				if (player.TotalSum < dealer.TotalSum)
+					return EndCondition.LossUnderDealer;
+				return EndCondition.Win;
+			}
         } while (BoolAsk("Do you want to play again?"));
 
         Console.Clear();
-        Console.WriteLine("Press enter to exit.");
-        Console.ReadLine();
-    }
+        Console.WriteLine("Press any key to exit.");
+        Console.ReadKey(); // program end
 
-	private static void Newline(int amount = 1)
-    {
-        Console.Write(new string('\n', amount));
-    }
-    private static bool BoolAsk(string question, char requiredChar = 'Y')
-    {
-	    Console.WriteLine(question);
-	    string? input = Console.ReadLine();
-	    return input != null && input.ToUpper().Contains(requiredChar);
-    }
+        bool BoolAsk(string question, char requiredChar = 'Y')
+		{
+			Console.WriteLine(question);
+			string? input = Console.ReadLine();
+			lastAnswer = input != null && input.ToUpper().Contains(requiredChar);
+			return lastAnswer.Value;
+		}
+	}
+
+	private static void InsertNewline(int amount = 1)
+	{
+		Console.Write(new string('\n', amount));
+	}
+	private static string SelectEndText(EndCondition endTerms)
+	{
+		return endTerms switch
+		{
+			EndCondition.Tie => "TIE WITH DEALER.",
+			EndCondition.LossOver21 => "YOU LOSE. You went over 21.",
+			EndCondition.LossUnderDealer => "YOU LOSE. Your cards were less than the dealer's cards.",
+			EndCondition.Win => "YOU WIN.",
+			_ => "Invalid end condition?"
+		};
+	}
 }
