@@ -1,6 +1,4 @@
-﻿using BlackjackConsoleGame.Cards;
-
-namespace BlackjackConsoleGame;
+﻿namespace BlackjackConsoleGame;
 
 public static class Program
 {
@@ -13,9 +11,6 @@ public static class Program
         {
 	        Table table = new Table();
 
-	        Hand dealer = table.Dealer;
-            Hand player = table.Player;
-
 	        // bools for runtime display options
 	        lastAnswer = null;
 	        dealerIsDrawing = false;
@@ -25,9 +20,9 @@ public static class Program
 				Console.Clear();
 				Console.WriteLine("--- BLACKJACK: GET TO 21 ---");
 				InsertNewline();
-				Console.WriteLine($"DEALER:\n{dealer}");
+				Console.WriteLine($"DEALER:\n{table.Dealer}");
 				InsertNewline();
-				Console.WriteLine($"PLAYER:\n{player}");
+				Console.WriteLine($"PLAYER:\n{table.Player}");
 				InsertNewline();
 				if (dealerIsDrawing) Console.WriteLine("Dealer is drawing cards...");
 				else if (lastAnswer != null) Console.WriteLine($"You said {(lastAnswer.Value ? "yes" : "no")} to get a card.");
@@ -38,18 +33,44 @@ public static class Program
             UpdateTableInfo();
 
 			// give cards to player untill they say no, OR total >= 21 (immediate win or loss)
-            while (player.TotalSum < 21 && BoolAsk("Do you want another card?"))
+            while (table.Player.TotalSum < 21 && BoolAsk("Do you want another card?"))
             {
-	            table.Deck.GiveCardTo(player);
+	            table.Deck.GiveCardTo(table.Player);
 	            UpdateTableInfo();
+	            if (BoolAsk("Do you want to increase your bet?"))
+	            {
+		            const int minimum = 0;
+		            if (table.Player.CanBet(minimum))
+		            {
+			            table.Player.MakeBet(BetAmount());
+
+			            int BetAmount()
+			            {
+				            int amount;
+				            bool underMininum = false;
+				            bool overPoints = false;
+							do
+							{
+								if (underMininum) Console.WriteLine($"You cannot bet less than minium. ({minimum})");
+								if (overPoints) Console.WriteLine($"You cannot bet more than you have. ({table.Player.Points})");
+
+								amount = IntAsk("How much do you want to bet?");
+								underMininum = amount < minimum;
+								overPoints = amount > table.Player.Points;
+							}
+							while (underMininum || overPoints);
+							return amount;
+			            }
+		            }
+	            }
             }
             lastAnswer = null;
 
 	        dealerIsDrawing = true;
             // give cards to dealer untill total >= 17
-			while (dealer.TotalSum < 17)
+			while (table.Dealer.TotalSum < 17)
 			{
-				table.Deck.GiveCardTo(dealer);
+				table.Deck.GiveCardTo(table.Dealer);
 
 				// dramatically add cards
 				UpdateTableInfo();
@@ -68,11 +89,11 @@ public static class Program
 
 			EndCondition CheckEndCondition()
 			{
-				if (player.TotalSum == dealer.TotalSum)
+				if (table.Player.TotalSum == table.Dealer.TotalSum)
 					return EndCondition.Tie;
-				if (player.TotalSum > 21)
+				if (table.Player.TotalSum > 21)
 					return EndCondition.LossOver21;
-				if (player.TotalSum < dealer.TotalSum)
+				if (table.Player.TotalSum < table.Dealer.TotalSum)
 					return EndCondition.LossUnderDealer;
 				return EndCondition.Win;
 			}
@@ -82,28 +103,37 @@ public static class Program
         Console.WriteLine("Press any key to exit.");
         Console.ReadKey(); // program end
 
-        bool BoolAsk(string question, char requiredChar = 'Y')
-		{
-			Console.WriteLine(question);
-			string? input = Console.ReadLine();
-			lastAnswer = input?.ToUpper().Contains(requiredChar);
-			return lastAnswer != null && lastAnswer.Value;
-		}
-
-        int IntAsk(string amountQuestion, int mininum = 0)
+        bool BoolAsk(string question, char trueChar = 'Y', char falseChar = 'N')
         {
-	        int amount = 0;
-	        int inputAttempts = 0;
-	        bool validInput = false;
+	        bool invalidAnswer = false;
+	        do
+	        {
+		        Console.WriteLine(question);
+		        if (invalidAnswer) Console.WriteLine($"Invalid answer. Write either '{trueChar}' or '{falseChar}'.");
+				string? input = Console.ReadLine()?.ToUpper();
+				if (input == null) continue;
+				bool answeredTrue = input.Contains(trueChar);
+				bool answeredFalse = input.Contains(falseChar);
+				invalidAnswer = !(answeredTrue || answeredFalse);
+				if (!invalidAnswer)
+				{
+					if (answeredTrue) lastAnswer = true;
+					else if (answeredFalse) lastAnswer = false;
+				}
+	        } while (invalidAnswer);
+	        return lastAnswer != null && lastAnswer.Value;
+		}
+        int IntAsk(string amountQuestion)
+        {
+	        int amount;
+	        bool inputInvalidString = false;
 	        do
 	        {
 				Console.Write(amountQuestion);
-				if (inputAttempts > 0) Console.WriteLine("Invalid input. Please try again.");
-
+				if (inputInvalidString) Console.WriteLine("Invalid input.\nPlease try again.");
 				string? input = Console.ReadLine();
-				validInput = int.TryParse(input, out amount);
-				inputAttempts++;
-	        } while (!validInput);
+				inputInvalidString = int.TryParse(input, out amount);
+	        } while (!inputInvalidString);
 	        return amount;
         }
 	}

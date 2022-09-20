@@ -5,6 +5,8 @@ public class Player : Hand
 	private int _points;
 	private int _activeBet;
 
+	public int Points => _points;
+
 	private const int StartingPoints = 100;
 
 	public Player()
@@ -14,8 +16,10 @@ public class Player : Hand
 
 	public override string ToString()
 	{
-		return $"Money: {_points}, Current Bet: {_activeBet},\n{base.ToString()}";
+		return $"Points: {Points}, Current Bet: {_activeBet},\n{base.ToString()}";
 	}
+
+	public bool CanBet(int minimum) => _points >= minimum;
 
 	public void MakeBet(int amount)
 	{
