@@ -1,14 +1,16 @@
-﻿namespace BlackjackConsoleGame.Cards;
+﻿using BlackjackConsoleGame.Cards;
+
+namespace BlackjackConsoleGame;
 
 public class Hand : CardCollection
 {
-	private bool _dirty;
 	private int _total;
+	private bool _totalIsDirty;
 	public int TotalSum
 	{
 		get
 		{
-			if (!_dirty) return _total;
+			if (!_totalIsDirty) return _total;
 
 			int sum = 0;
 			int aces = 0;
@@ -24,6 +26,7 @@ public class Hand : CardCollection
 			int largestAllowedAceTotal = 1 * aces;
 			for (int i = 0; i < aces; i++)
 			{
+				// chose the largest possible ace value that doesn't bust
 				int contender = largestAllowedAceTotal + 10;
 				if (contender + sum <= 21) largestAllowedAceTotal = contender;
 				else break;
@@ -35,12 +38,12 @@ public class Hand : CardCollection
 
 	public override string ToString()
 	{
-		return $"[Total = {TotalSum}], [Cards = ({string.Join(", ", Cards)})]";
+		return $"Total: {TotalSum}, Card{(Cards.Count > 1 ? "s" : "")}: [{string.Join(", ", Cards)}]";
 	}
 
 	public void ReceiveCard(Card card)
 	{
-		_dirty = true;
+		_totalIsDirty = true;
 		Cards.Add(card);
 	}
 }

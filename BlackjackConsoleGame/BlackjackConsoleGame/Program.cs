@@ -4,14 +4,6 @@ namespace BlackjackConsoleGame;
 
 public static class Program
 {
-	private enum EndCondition
-	{
-		Tie,
-		LossUnderDealer,
-		LossOver21,
-		Win,
-	}
-
 	public static void Main()
 	{
 		bool dealerIsDrawing;
@@ -33,16 +25,16 @@ public static class Program
 				Console.Clear();
 				Console.WriteLine("--- BLACKJACK: GET TO 21 ---");
 				InsertNewline();
-				Console.WriteLine($"DEALER: {dealer}");
-				Console.WriteLine($"PLAYER: {player}");
+				Console.WriteLine($"DEALER:\n{dealer}");
+				InsertNewline();
+				Console.WriteLine($"PLAYER:\n{player}");
 				InsertNewline();
 				if (dealerIsDrawing) Console.WriteLine("Dealer is drawing cards...");
 				else if (lastAnswer != null) Console.WriteLine($"You said {(lastAnswer.Value ? "yes" : "no")} to get a card.");
 			}
 
 			table.Deck.Shuffle();
-			table.Deck.GiveCardTo(dealer); // dealer starts with 1 card.
-            table.Deck.GiveCardsTo(player, 2); // player gets 2 cards.
+			table.GiveStartingCards();
             UpdateTableInfo();
 
 			// give cards to player untill they say no, OR total >= 21 (immediate win or loss)
@@ -70,7 +62,9 @@ public static class Program
 			Thread.Sleep(1000);
 
 			// game end
-			Console.WriteLine(SelectEndText(CheckEndCondition()));
+			EndCondition endCondition = CheckEndCondition();
+			table.EndGame(endCondition);
+			Console.WriteLine(SelectEndText(endCondition));
 
 			EndCondition CheckEndCondition()
 			{
@@ -95,6 +89,23 @@ public static class Program
 			lastAnswer = input?.ToUpper().Contains(requiredChar);
 			return lastAnswer != null && lastAnswer.Value;
 		}
+
+        int IntAsk(string amountQuestion, int mininum = 0)
+        {
+	        int amount = 0;
+	        int inputAttempts = 0;
+	        bool validInput = false;
+	        do
+	        {
+				Console.Write(amountQuestion);
+				if (inputAttempts > 0) Console.WriteLine("Invalid input. Please try again.");
+
+				string? input = Console.ReadLine();
+				validInput = int.TryParse(input, out amount);
+				inputAttempts++;
+	        } while (!validInput);
+	        return amount;
+        }
 	}
 
 	private static void InsertNewline(int amount = 1)
