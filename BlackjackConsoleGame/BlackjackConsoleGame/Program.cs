@@ -37,6 +37,8 @@ public static class Program
             {
 	            table.Deck.GiveCardTo(table.Player);
 	            UpdateTableInfo();
+	            if (table.Player.TotalSum >= 21) break;
+
 	            if (BoolAsk("Do you want to increase your bet?"))
 	            {
 		            const int minimum = 0;
@@ -110,7 +112,7 @@ public static class Program
 	        {
 		        Console.WriteLine(question);
 		        if (invalidAnswer) Console.WriteLine($"Invalid answer. Write either '{trueChar}' or '{falseChar}'.");
-				string? input = Console.ReadLine()?.ToUpper();
+				string? input = ReadUserInput()?.ToUpper();
 				if (input == null) continue;
 				bool answeredTrue = input.Contains(trueChar);
 				bool answeredFalse = input.Contains(falseChar);
@@ -129,15 +131,20 @@ public static class Program
 	        bool inputInvalidString = false;
 	        do
 	        {
-				Console.Write(amountQuestion);
+				Console.WriteLine(amountQuestion);
 				if (inputInvalidString) Console.WriteLine("Invalid input.\nPlease try again.");
-				string? input = Console.ReadLine();
+				string? input = ReadUserInput();
 				inputInvalidString = int.TryParse(input, out amount);
 	        } while (!inputInvalidString);
 	        return amount;
         }
 	}
 
+	private static string? ReadUserInput()
+	{
+		Console.Write("> ");
+		return Console.ReadLine();
+	}
 	private static void InsertNewline(int amount = 1)
 	{
 		Console.Write(new string('\n', amount));
