@@ -20,9 +20,12 @@ public static class Program
 				Console.Clear();
 				Console.WriteLine("--- BLACKJACK: GET TO 21 ---");
 				InsertNewline();
-				Console.WriteLine($"DEALER:\n{table.Dealer}");
-				InsertNewline();
-				Console.WriteLine($"PLAYER:\n{table.Player}");
+
+				Console.WriteLine(" ---------------------------------------------------------------------- ");
+				Console.WriteLine(DealerInfo(table));
+				Console.WriteLine(PlayerInfo(table));
+                Console.WriteLine(" ---------------------------------------------------------------------- ");
+
 				InsertNewline();
 				if (dealerIsDrawing) Console.WriteLine("Dealer is drawing cards...");
 				else if (lastAnswer != null) Console.WriteLine($"You said {(lastAnswer.Value ? "yes" : "no")} to get a card.");
@@ -160,4 +163,29 @@ public static class Program
 			_ => "Invalid end condition?"
 		};
 	}
+    private static string DealerInfo(Table table)
+    {
+	    string sentence = "";
+        sentence += $"| DEALER: {table.Dealer}";
+
+        //Makes a longer space for every less than max amount of letters in the description
+        int dealerIndent = 60 - table.Dealer.ToString().Length;
+        for (int i = 0; i < dealerIndent; i++) sentence += " ";
+        sentence += " |";
+
+        return sentence;
+    }
+
+    private static string PlayerInfo(Table table)
+    {
+		string sentence = "";
+        sentence += $"| PLAYER: {table.Player}";
+
+		//Makes a longer space for every less than max amount of letters in the description
+        int playerIndent = 60 - table.Player.ToString().Length;
+        for (int i = 0; i < playerIndent; i++) sentence += " ";
+        sentence += " |";
+
+        return sentence;
+    }
 }
