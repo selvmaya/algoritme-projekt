@@ -21,7 +21,7 @@ public class Card
 
 	public override string ToString()
 	{
-		return FullName();
+		return $"[{FullName()}]";
 	}
 
 	public Card(int number, CardType type)
@@ -31,7 +31,7 @@ public class Card
 		_isDirty = true;
 	}
 
-	public string NumberName()
+	public string NameFromNumber()
 	{
 		return _number switch
 		{
@@ -44,6 +44,6 @@ public class Card
 	}
 	public string FullName()
 	{
-		return $"{NumberName()} of {_type}";
+		return $"{NameFromNumber()} of {_type}";
 	}
 }

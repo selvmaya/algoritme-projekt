@@ -36,9 +36,18 @@ public class Hand : CardCollection
 		}
 	}
 
+	public virtual string[] Info()
+	{
+		return new[]
+		{
+			$"Total: {TotalSum}",
+			$"Card{(Cards.Count > 1 ? "s" : "")}: {string.Join(", ", Cards)}",
+		};
+	}
+
 	public override string ToString()
 	{
-		return $"Total: {TotalSum}, Card{(Cards.Count > 1 ? "s" : "")}: [{string.Join(", ", Cards)}]";
+		return $"Total: {TotalSum}, Card{(Cards.Count > 1 ? "s" : "")}: {string.Join(", ", Cards)}";
 	}
 
 	public void ReceiveCard(Card card)

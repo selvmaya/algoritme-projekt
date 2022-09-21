@@ -45,9 +45,9 @@ public class Table
 		const char verticalChar = '|';
 		const char cornerChar = 'X'; // displayed in the corners of the boxes draw with horizontal and vertical char
 
-		string dealerInfo = Dealer.ToString();
 		string[] playerInfos = Player.Info();
-		int dealerContentWidth = dealerInfo.Length;
+		string[] dealerInfos = Dealer.Info();
+		int dealerContentWidth = Math.Max(dealerInfos[0].Length, dealerInfos[1].Length);
 		int playerContentWidth = Math.Max(playerInfos[0].Length, playerInfos[1].Length);
 
 		int absoluteBoxWidth = Math.Max(playerContentWidth, dealerContentWidth) + 2;
@@ -57,9 +57,9 @@ public class Table
 
 		string[][] contents =
 		{
-			new [] {
-				"DEALER:",
-				Dealer.ToString()
+			new []
+			{
+				"DEALER:", dealerInfos[0], playerInfos[1],
 			},
 			new []
 			{

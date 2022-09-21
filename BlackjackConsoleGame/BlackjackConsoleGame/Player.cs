@@ -14,13 +14,12 @@ public class Player : Hand
 		_points = StartingPoints;
 	}
 
-	public string[] Info()
+	public override string[] Info()
 	{
-		return new[]
+		return base.Info().Concat(new[]
 		{
-			$"{base.ToString()}",
 			$"Current points {Points}, Current bet: {_activeBet}",
-		};
+		}).ToArray();
 	}
 
 	public bool CanBet(int minimum) => _points >= minimum;

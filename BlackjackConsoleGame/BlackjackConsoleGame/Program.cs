@@ -69,17 +69,20 @@ public static class Program
             }
             lastAnswer = null;
 
-	        dealerIsDrawing = true;
-            // give cards to dealer untill total >= 17
-			while (table.Dealer.TotalSum < 17)
-			{
-				table.Deck.GiveCardTo(table.Dealer);
+            if (table.Player.TotalSum < 21)
+            {
+				dealerIsDrawing = true;
+				// give cards to dealer untill total >= 17
+				while (table.Dealer.TotalSum < 17)
+				{
+					table.Deck.GiveCardTo(table.Dealer);
 
-				// dramatically add cards
-				UpdateTableInfo();
-				Thread.Sleep(750);
-			}
-			dealerIsDrawing = false;
+					// dramatically add cards
+					UpdateTableInfo();
+					Thread.Sleep(750);
+				}
+				dealerIsDrawing = false;
+            }
 
 			// dramatically let player see final cards before end condition is stated
 			UpdateTableInfo();
