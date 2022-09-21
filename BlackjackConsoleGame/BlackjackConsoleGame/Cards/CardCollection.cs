@@ -1,6 +1,6 @@
 ﻿namespace BlackjackConsoleGame.Cards;
 
-public class CardCollection
+public abstract class CardCollection
 {
 	protected List<Card> Cards = new List<Card>();
 

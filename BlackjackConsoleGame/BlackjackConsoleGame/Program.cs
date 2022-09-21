@@ -18,15 +18,13 @@ public static class Program
 			void UpdateTableInfo() // TODO: make this prettier/graphically detailed
 			{
 				Console.Clear();
-				Console.WriteLine("--- BLACKJACK: GET TO 21 ---");
+
+				Console.WriteLine("BLACKJACK: GET TO 21");
 				InsertNewline();
 
-				Console.WriteLine(" ---------------------------------------------------------------------- ");
-				Console.WriteLine(DealerInfo(table));
-				Console.WriteLine(PlayerInfo(table));
-                Console.WriteLine(" ---------------------------------------------------------------------- ");
-
+				table.Display();
 				InsertNewline();
+
 				if (dealerIsDrawing) Console.WriteLine("Dealer is drawing cards...");
 				else if (lastAnswer != null) Console.WriteLine($"You said {(lastAnswer.Value ? "yes" : "no")} to get a card.");
 			}
@@ -44,7 +42,7 @@ public static class Program
 
 	            if (BoolAsk("Do you want to increase your bet?"))
 	            {
-		            const int minimum = 0;
+		            const int minimum = 1;
 		            if (table.Player.CanBet(minimum))
 		            {
 			            table.Player.MakeBet(BetAmount());
@@ -102,6 +100,17 @@ public static class Program
 					return EndCondition.LossUnderDealer;
 				return EndCondition.Win;
 			}
+			static string SelectEndText(EndCondition endTerms)
+			{
+				return endTerms switch
+				{
+					EndCondition.Tie => "TIE WITH DEALER.",
+					EndCondition.LossOver21 => "YOU LOSE. You went over 21.",
+					EndCondition.LossUnderDealer => "YOU LOSE. Your cards were less than the dealer's cards.",
+					EndCondition.Win => "YOU WIN.",
+					_ => "Invalid end condition?"
+				};
+			}
         } while (BoolAsk("Do you want to play again?"));
 
         Console.Clear();
@@ -148,44 +157,9 @@ public static class Program
 		Console.Write("> ");
 		return Console.ReadLine();
 	}
+
 	private static void InsertNewline(int amount = 1)
 	{
 		Console.Write(new string('\n', amount));
 	}
-	private static string SelectEndText(EndCondition endTerms)
-	{
-		return endTerms switch
-		{
-			EndCondition.Tie => "TIE WITH DEALER.",
-			EndCondition.LossOver21 => "YOU LOSE. You went over 21.",
-			EndCondition.LossUnderDealer => "YOU LOSE. Your cards were less than the dealer's cards.",
-			EndCondition.Win => "YOU WIN.",
-			_ => "Invalid end condition?"
-		};
-	}
-    private static string DealerInfo(Table table)
-    {
-	    string sentence = "";
-        sentence += $"| DEALER: {table.Dealer}";
-
-        //Makes a longer space for every less than max amount of letters in the description
-        int dealerIndent = 60 - table.Dealer.ToString().Length;
-        for (int i = 0; i < dealerIndent; i++) sentence += " ";
-        sentence += " |";
-
-        return sentence;
-    }
-
-    private static string PlayerInfo(Table table)
-    {
-		string sentence = "";
-        sentence += $"| PLAYER: {table.Player}";
-
-		//Makes a longer space for every less than max amount of letters in the description
-        int playerIndent = 60 - table.Player.ToString().Length;
-        for (int i = 0; i < playerIndent; i++) sentence += " ";
-        sentence += " |";
-
-        return sentence;
-    }
 }
