@@ -55,4 +55,9 @@ public class Hand : CardCollection
 		_totalIsDirty = true;
 		Cards.Add(card);
 	}
+
+	public void ResetCards()
+	{
+		Cards = new List<Card>();
+	}
 }

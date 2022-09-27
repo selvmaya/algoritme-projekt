@@ -15,6 +15,13 @@ public class Table
 		Player = new Player();
 	}
 
+	public void ResetAllCards()
+	{
+		Deck.Reset();
+		Dealer.ResetCards();
+		Player.ResetCards();
+	}
+
 	public void GiveStartingCards()
 	{
 		Deck.GiveCardTo(Dealer);
@@ -45,28 +52,18 @@ public class Table
 		const char verticalChar = '|';
 		const char cornerChar = 'X'; // displayed in the corners of the boxes draw with horizontal and vertical char
 
-		string[] playerInfos = Player.Info();
-		string[] dealerInfos = Dealer.Info();
-		int dealerContentWidth = Math.Max(dealerInfos[0].Length, dealerInfos[1].Length);
-		int playerContentWidth = Math.Max(playerInfos[0].Length, playerInfos[1].Length);
+		List<string> dealerInfos = Dealer.Info().ToList();
+		dealerInfos.Insert(0, "DEALER:");
+		List<string> playerInfos = Player.Info().ToList();
+		playerInfos.Insert(0, "PLAYER:");
 
-		int absoluteBoxWidth = Math.Max(playerContentWidth, dealerContentWidth) + 2;
+		List<string>[] contents = { dealerInfos, playerInfos };
+		int absoluteBoxWidth = LongestLength(contents) + 2;
 
 		string horizontalEdge = $"{cornerChar}{new string(horizontalChar, absoluteBoxWidth)}{cornerChar}";
 		Console.WriteLine(horizontalEdge);
 
-		string[][] contents =
-		{
-			new []
-			{
-				"DEALER:", dealerInfos[0], playerInfos[1],
-			},
-			new []
-			{
-				"PLAYER:", playerInfos[0], playerInfos[1],
-			}
-		};
-		foreach (string[] content in contents)
+		foreach (List<string> content in contents)
 		{
 			foreach (string line in content)
 			{
@@ -75,6 +72,11 @@ public class Table
 				Console.WriteLine(verticalChar); // write right side of box, go next line
 			}
 			Console.WriteLine(horizontalEdge);
+		}
+
+		static int LongestLength(List<string>[] contents)
+		{
+			return (from content in contents from line in content select line.Length).Prepend(0).Max();
 		}
 	}
 }

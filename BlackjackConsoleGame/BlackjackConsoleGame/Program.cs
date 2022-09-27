@@ -7,9 +7,11 @@ public static class Program
 		bool dealerIsDrawing;
 		bool? lastAnswer;
 
+		Table table = new Table(); // player should keep bet between games
+
         do // repeated games
         {
-	        Table table = new Table();
+	        table.ResetAllCards();
 
 	        // bools for runtime display options
 	        lastAnswer = null;
@@ -18,10 +20,8 @@ public static class Program
 			void UpdateTableInfo() // TODO: make this prettier/graphically detailed
 			{
 				Console.Clear();
-
 				Console.WriteLine("BLACKJACK: GET TO 21");
 				InsertNewline();
-
 				table.Display();
 				InsertNewline();
 
@@ -46,6 +46,7 @@ public static class Program
 		            if (table.Player.CanBet(minimum))
 		            {
 			            table.Player.MakeBet(BetAmount());
+			            UpdateTableInfo();
 
 			            int BetAmount()
 			            {
@@ -91,6 +92,7 @@ public static class Program
 			// game end
 			EndCondition endCondition = CheckEndCondition();
 			table.EndGame(endCondition);
+			UpdateTableInfo();
 			Console.WriteLine(SelectEndText(endCondition));
 
 			EndCondition CheckEndCondition()

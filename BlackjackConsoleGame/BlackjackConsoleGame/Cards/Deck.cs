@@ -7,6 +7,11 @@ public class Deck : CardCollection
 		Cards = FreshCards();
 	}
 
+	public void Reset()
+	{
+		Cards = FreshCards();
+	}
+
 	private static List<Card> FreshCards()
 	{
 		Array types = Enum.GetValues(typeof(CardType));
