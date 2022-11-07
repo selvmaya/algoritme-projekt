@@ -17,7 +17,7 @@ public static class Program
 	        lastAnswer = null;
 	        dealerIsDrawing = false;
 
-			void UpdateTableInfo()
+			void Redraw()
 			{
 				Console.Clear();
 				Console.WriteLine("BLACKJACK: GET TO 21");
@@ -31,13 +31,13 @@ public static class Program
 
 			table.Deck.Shuffle();
 			table.GiveStartingCards();
-            UpdateTableInfo();
+            Redraw();
 
 			// give cards to player untill they say no, OR total >= 21 (immediate win or loss)
             while (table.Player.TotalSum < 21 && BoolAsk("Do you want another card?"))
             {
 	            table.Deck.GiveCardTo(table.Player);
-	            UpdateTableInfo();
+	            Redraw();
 	            if (table.Player.TotalSum >= 21) break;
 
 	            if (BoolAsk("Do you want to increase your bet?"))
@@ -46,7 +46,7 @@ public static class Program
 		            if (table.Player.CanBet(minimum))
 		            {
 			            table.Player.MakeBet(BetAmount());
-			            UpdateTableInfo();
+			            Redraw();
 
 			            int BetAmount()
 			            {
@@ -79,20 +79,20 @@ public static class Program
 					table.Deck.GiveCardTo(table.Dealer);
 
 					// dramatically add cards
-					UpdateTableInfo();
+					Redraw();
 					Thread.Sleep(750);
 				}
 				dealerIsDrawing = false;
             }
 
 			// dramatically let player see final cards before end condition is stated
-			UpdateTableInfo();
+			Redraw();
 			Thread.Sleep(1000);
 
 			// game end
 			EndCondition endCondition = CheckEndCondition();
 			table.EndGame(endCondition);
-			UpdateTableInfo();
+			Redraw();
 			Console.WriteLine(SelectEndText(endCondition));
 
 			EndCondition CheckEndCondition()
