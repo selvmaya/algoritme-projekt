@@ -17,7 +17,7 @@ public static class Program
 	        lastAnswer = null;
 	        dealerIsDrawing = false;
 
-			void UpdateTableInfo() // TODO: make this prettier/graphically detailed
+			void UpdateTableInfo()
 			{
 				Console.Clear();
 				Console.WriteLine("BLACKJACK: GET TO 21");
