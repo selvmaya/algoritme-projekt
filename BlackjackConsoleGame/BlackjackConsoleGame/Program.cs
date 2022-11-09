@@ -1,7 +1,10 @@
-﻿namespace BlackjackConsoleGame;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace BlackjackConsoleGame;
 
 public static class Program
 {
+	[SuppressMessage("ReSharper", "CognitiveComplexity")]
 	public static void Main()
 	{
 		bool dealerIsDrawing;
