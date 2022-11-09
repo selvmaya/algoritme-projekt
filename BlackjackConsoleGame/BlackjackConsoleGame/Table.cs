@@ -6,7 +6,7 @@ public class Table
 {
 	public readonly Deck Deck;
 	public readonly Hand Dealer;
-	public readonly Player Player; // might want to into a list/array
+	public readonly Player Player;
 
 	public Table()
 	{

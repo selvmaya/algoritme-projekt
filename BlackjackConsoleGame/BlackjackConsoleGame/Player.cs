@@ -2,16 +2,15 @@
 
 public class Player : Hand
 {
-	private int _points;
 	private int _activeBet;
 
-	public int Points => _points;
+	public int Points { get; private set; }
 
 	private const int StartingPoints = 100;
 
 	public Player()
 	{
-		_points = StartingPoints;
+		Points = StartingPoints;
 	}
 
 	public override string[] Info()
@@ -22,12 +21,12 @@ public class Player : Hand
 		}).ToArray();
 	}
 
-	public bool CanBet(int minimum) => _points >= minimum;
+	public bool CanBet(int minimum) => Points >= minimum;
 
 	public void MakeBet(int amount)
 	{
-		_activeBet = Math.Min(amount, _points);
-		_points -= _activeBet;
+		_activeBet = Math.Min(amount, Points);
+		Points -= _activeBet;
 	}
 	public void LoseBet()
 	{
@@ -35,12 +34,12 @@ public class Player : Hand
 	}
 	public void RefundBet()
 	{
-		_points += _activeBet;
+		Points += _activeBet;
 		_activeBet = 0;
 	}
 	public void WinBet()
 	{
-		_points += _activeBet * 2;
+		Points += _activeBet * 2;
 		_activeBet = 0;
 	}
 }
