@@ -61,8 +61,8 @@ public class Table
 		int absoluteBoxWidth = LongestLength(contents) + 2;
 
 		string horizontalEdge = $"{cornerChar}{new string(horizontalChar, absoluteBoxWidth)}{cornerChar}";
-		Console.WriteLine(horizontalEdge);
 
+		Console.WriteLine(horizontalEdge);
 		foreach (List<string> content in contents)
 		{
 			foreach (string line in content)
